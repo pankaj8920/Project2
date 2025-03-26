@@ -5,7 +5,6 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./configs/mongodb.js";
 import { clerkWebhooks } from "./controllers/webhooks.js";
-import serverless from "serverless-http";
 
 const app = express();
 
@@ -27,6 +26,4 @@ if (process.env.NODE_ENV !== "production") {
     });
 }
 
-// ✅ Correct way to export in ES module
-export default app;
-export const handler = serverless(app);
+
