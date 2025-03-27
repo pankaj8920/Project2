@@ -10,24 +10,18 @@ import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
 
-// Connect to database
-await connectDB();
-
 // Middlewares
 app.use(cors());
-app.use(clerkMiddleware())
+app.use(express.json()); // Parse JSON bodies
+app.use(clerkMiddleware());
+
+// Connect to MongoDB
+await connectDB();
 
 // Routes
 app.get("/", (req, res) => res.send("API Working"));
-app.post('/clerk', express.json(), clerkWebhooks);
-app.use('/api/educator',express.json(),educatorRouter)
+app.post('/clerk', clerkWebhooks); // Clerk webhook route
+app.use('/api/educator', educatorRouter); // Educator routes
 
-// Port (Not needed in Vercel since it's serverless)
-// const PORT = process.env.PORT || 3000;
-// if (process.env.NODE_ENV !== "production") {
-//     app.listen(PORT, () => {
-//         console.log(`Server is running on port ${PORT}`);
-//     });
-// }
-
-
+// Export the Express app as a Vercel serverless function
+export default app;
