@@ -2,7 +2,7 @@ import {Webhook} from "svix"
 
 import User from "../models/User.js";
 
-// Api controller function to manage clerk with database
+
 
  export const clerkWebhooks = async(req,res)=>{
        try{
@@ -11,7 +11,7 @@ import User from "../models/User.js";
         await whook.verify(JSON.stringify(req.body),{
             "svix-id" :req.headers["svix-id"],
             "svix-timestamp":req.headers["svix-timestamp"],
-            "svix" : req.headers["svix-signature"]
+            "svix-signature" : req.headers["svix-signature"]
 
         })
         const{data,type} = req.body
