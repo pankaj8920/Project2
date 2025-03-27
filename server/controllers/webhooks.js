@@ -17,17 +17,27 @@ import User from "../models/User.js";
         const{data,type} = req.body
 
         switch(type) {
-            case 'user.created':{
+            case 'user.created': {
+                console.log("Received user data:", data); 
+            
                 const userData = {
                     _id: data.id,
-                    email: data.email_addresses[0].email_address,
-                    name: data.first_name + " " + data.last_name,
-                    imageUrl:data.image_url,
+                    email: data.email_addresses?.[0]?.email_address || "",  
+                    name: `${data.first_name || ''} ${data.last_name || ''}`.trim(),  
+                    imageUrl: data.image_url || "", 
+                };
+            
+                try {
+                    const newUser = await User.create(userData);
+                    console.log("✅ User created successfully:", newUser);
+                    res.json({});
+                } catch (error) {
+                    console.error("❌ Error creating user:", error);
+                    res.status(500).json({ error: "Internal Server Error" });
                 }
-                await User.create(userData)
-                res.json({})
                 break;
             }
+            
             case 'user.updated':{
                 const userData = {
                     email: data.email_address[0].email_address,

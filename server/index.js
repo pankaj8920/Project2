@@ -19,7 +19,7 @@ const initializeDB = async () => {
     console.log("✅ MongoDB connected successfully");
   } catch (error) {
     console.error("❌ MongoDB connection failed:", error.message);
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.MONGODB_URI === "production") {
       process.exit(1); 
     }
   }
@@ -45,13 +45,13 @@ app.use((err, req, res, next) => {
   console.error("⚠️ Server error:", err.stack);
   res.status(500).json({ 
     error: "Internal Server Error",
-    message: process.env.NODE_ENV === "development" ? err.message : undefined
+    message: process.env.MONGODB_URI === "development" ? err.message : undefined
   });
 });
 const startServer = async () => {
   try {
     await initializeDB();
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.MONGODB_URI !== "production") {
       const PORT = process.env.PORT || 3000;
       app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
